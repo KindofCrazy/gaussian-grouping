@@ -125,6 +125,7 @@ bash script/train.sh mipnerf360/counter 2
 2D SAM 分割与 mask 的匹配会出现问题。
 
 <center class="half">
-<img src="media/image.jpg" width=00/>
+<img src="media/image.jpg" width=200/>
+<>
 <img src="media/mask.jpg" width=200/>
 </center>
