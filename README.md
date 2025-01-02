@@ -126,6 +126,5 @@ bash script/train.sh mipnerf360/counter 2
 
 <center class="half">
 <img src="media/image.jpg" width=200/>
-<>
 <img src="media/mask.jpg" width=200/>
 </center>
