@@ -1,19 +1,19 @@
 # Gaussian Grouping [ECCV'24]
 
-> [**Gaussian Grouping: Segment and Edit Anything in 3D Scenes**](https://arxiv.org/abs/2312.00732)           
-> [[Project Page]](https://ymq2017.github.io/gaussian-grouping)           
+> [**Gaussian Grouping: Segment and Edit Anything in 3D Scenes**](https://arxiv.org/abs/2312.00732)            
+> [[项目页面]](https://ymq2017.github.io/gaussian-grouping)            
 > ECCV 2024  
 > ETH Zurich
 
-## Installation
+## 安装
 
-Clone the repository locally
-```
-git clone https://github.com/lkeab/gaussian-grouping.git
+将仓库克隆到本地
+```bash
+git clone https://github.com/lkeab/gaussian-grouping.git 
 cd gaussian-grouping
 ```
 
-Our default, provided install method is based on Conda package and environment management:
+提供的默认安装方法基于 Conda 包和环境管理：
 ```bash
 conda create -n gaussian_grouping python=3.8 -y
 conda activate gaussian_grouping 
@@ -26,14 +26,14 @@ pip install submodules/diff-gaussian-rasterization
 pip install submodules/simple-knn
 ```
 
-(Optional) If you want to prepare masks on your own dataset, you will also need to prepare [DEVA](https://github.com/hkchengrex/Tracking-Anything-with-DEVA) environment.
+（可选）如果需要在自己的数据集上准备掩模，还需要准备 [DEVA](https://github.com/hkchengrex/Tracking-Anything-with-DEVA) 环境。
 
 ```bash
 cd Tracking-Anything-with-DEVA
 pip install -e .
-bash scripts/download_models.sh     # Download the pretrained models
+bash scripts/download_models.sh     # 下载预训练模型
 
-git clone https://github.com/hkchengrex/Grounded-Segment-Anything.git
+git clone https://github.com/hkchengrex/Grounded-Segment-Anything.git 
 cd Grounded-Segment-Anything
 export AM_I_DOCKER=False
 export BUILD_WITH_CUDA=True
@@ -43,7 +43,7 @@ python -m pip install -e GroundingDINO
 cd ../..
 ```
 
-(Optional) If you want to inpaint on your own dataset, you will also need to prepare [LaMa](https://github.com/advimman/lama) environment.
+（可选）如果需要在自己的数据集上进行修复，还需要准备 [LaMa](https://github.com/advimman/lama) 环境。
 
 ```bash
 cd lama
@@ -51,12 +51,12 @@ pip install -r requirements.txt
 cd ..
 ```
 
-## Training
+## 训练
 
-### 1. Prepare associated SAM masks
+### 1. 准备关联的 SAM 掩模
 
-#### 1.1 Pre-converted datasets
-We provide converted datasets in our paper, You can use directly train on datasets from [hugging face link](https://huggingface.co/mqye/Gaussian-Grouping/tree/main)
+#### 1.1 预转换的数据集
+提供了转换后的数据集，可以直接从 [hugging face 链接](https://huggingface.co/mqye/Gaussian-Grouping/tree/main) 使用数据集进行训练
 
 ```
 data
@@ -67,10 +67,8 @@ data
 | |____counter
 ```
 
-
-#### 1.2 (Optional) Prepare your own datasets
-For your custom dataset, you can follow this step to create masks for training. If you want to prepare masks on your own dataset, you will need [DEVA](../Tracking-Anything-with-DEVA/README.md) python environment and checkpoints.
-
+#### 1.2 （可选）准备自己的数据集
+对于自定义数据集，可以按照以下步骤为训练创建掩模。如果需要在自己的数据集上准备掩模，将需要 [DEVA](../Tracking-Anything-with-DEVA/README.md) Python 环境和检查点。
 
 ```
 <location>
@@ -79,44 +77,54 @@ For your custom dataset, you can follow this step to create masks for training. 
     |---<image 1>
     |---...
 ```
-Firstly, convert initial camera pose and point cloud with colmap
-```
+
+首先，使用 colmap 转换初始相机姿态和点云
+```bash
 python convert.py -s <location>
 ```
 
-Then, convert SAM associated object masks. Note that the quality of converted-mask will largely affect the results of 3D segmentation and editing. And getting the mask is very fast. So it is best to adjust the parameters of anything segment first to make the mask as consistent and reasonable as possible from multiple views.
+然后，转换 SAM 关联对象掩模。请注意，转换掩模的质量将极大地影响 3D 语义分割和编辑的结果。并且获取掩模非常快。因此，最好先调整 anything segment 的参数，使掩模从多个视图中看起来尽可能一致和合理。
 
-Example1. Bear dataset
-```
+示例1. Bear 数据集
+```bash
 bash script/prepare_pseudo_label.sh bear 1
 ```
 
-Example2. figurines dataset
-```
+示例2. Figurines 数据集
+```bash
 bash script/prepare_pseudo_label.sh lerf/figurines 1
 ```
 
-Example3. counter dataset
-```
+示例3. Counter 数据集
+```bash
 bash script/prepare_pseudo_label.sh mipnerf360/counter 2
 ```
 
-### 2. Training and Masks Rendering
+### 2. 训练和掩模渲染
 
-For Gaussian Grouping training and segmentation rendering of trained 3D Gaussian Grouping model:
+对于 Gaussian Grouping 训练和训练好的 3D Gaussian Grouping 模型的分割渲染：
 
-Example1. Bear dataset
-```
+示例1. Bear 数据集
+```bash
 bash script/train.sh bear 1
 ```
 
-Example2. figurines dataset
-```
+示例2. Figurines 数据集
+```bash
 bash script/train_lerf.sh lerf/figurines 1
 ```
 
-Example3. counter dataset
-```
+示例3. Counter 数据集
+```bash
 bash script/train.sh mipnerf360/counter 2
 ```
 
+
+## 局限性
+
+2D SAM 分割与 mask 的匹配会出现问题。
+
+<center class="half">
+<img src="media/image.jpg" width=00/>
+<img src="media/mask.jpg" width=200/>
+</center>
